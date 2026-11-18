@@ -1,2 +1,2 @@
 # MLops-Practical
-MLOPS practical final practical repository
+MLOPS practical final practicals repository
