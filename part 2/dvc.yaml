@@ -1,0 +1,48 @@
+stages:
+  ingest:
+    cmd: python -m src.ingest
+    deps:
+      - src/ingest.py
+    outs:
+      - data/raw/digits.csv
+
+  preprocess:
+    cmd: python -m src.preprocess
+    deps:
+      - src/preprocess.py
+      - data/raw/digits.csv
+    outs:
+      - data/processed/train.csv
+      - data/processed/test.csv
+
+  features:
+    cmd: python -m src.build_features
+    deps:
+      - src/build_features.py
+      - feature_repo/features.py
+      - feature_repo/feature_store.yaml
+      - data/raw/digits.csv
+    outs:
+      - data/feature_store/digit_features.parquet
+
+  train:
+    cmd: python -m src.train
+    deps:
+      - src/train.py
+      - data/processed/train.csv
+      - data/processed/test.csv
+    outs:
+      - models/best_model.joblib
+      - models/best_model_name.txt
+
+  evaluate:
+    cmd: python -m src.evaluate
+    deps:
+      - src/evaluate.py
+      - models/best_model.joblib
+      - data/processed/test.csv
+    metrics:
+      - reports/metrics.json:
+          cache: false
+    plots:
+      - reports/confusion_matrix.png
