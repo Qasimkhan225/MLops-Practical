@@ -1,0 +1,6 @@
+project: handwritten_digits_store
+provider: local
+registry: data/registry.db
+online_store:
+  type: sqlite
+  path: data/online_store.db
